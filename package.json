@@ -1,5 +1,5 @@
 {
-  "name": "react-vite-some-demo",
+  "name": "react-vite-template",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "rm -f tsconfig.app.tsbuildinfo tsconfig.node.tsbuildinfo && vite build --base=/react-vite-some-demo",
+    "build": "rm -f tsconfig.app.tsbuildinfo tsconfig.node.tsbuildinfo && vite build --base=/react-vite-template",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,css,less}\"",
