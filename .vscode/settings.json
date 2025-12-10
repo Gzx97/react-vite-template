@@ -1,0 +1,49 @@
+{
+  // 1. 禁用 VS Code 内置格式化器，避免冲突
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "javascript.format.enable": false,
+  "typescript.format.enable": false,
+  "json.format.enable": false,
+  "html.format.enable": false,
+  "css.format.enable": false,
+  // 2. 强制使用项目中的 Prettier 配置
+  "prettier.requireConfig": true, // 必须读取项目 Prettier 配置才生效
+  "prettier.configPath": ".prettierrc", // 明确指定配置文件路径（如果命名不同需修改）
+  // 3. 缩进规则与 Prettier 保持一致
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false, // 禁用自动检测，避免覆盖 2 空格规则
+  // 4. 保存时自动格式化（确保触发 Prettier）
+  "editor.formatOnSave": true,
+  "editor.formatOnType": false, // 避免输入时频繁格式化干扰
+  // 5. 排除其他可能干扰的插件/规则
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll": "never"
+  },
+  // 6. 确保 Prettier 处理所有相关文件类型
+  "prettier.documentSelectors": [
+    "**/*.{js,jsx,ts,tsx,json,md,html,css,scss,yaml,yml}"
+  ],
+  // 7. 禁用 Prettier 插件的默认规则（完全服从项目配置）
+  "prettier.useEditorConfig": false, // 禁用 .editorconfig 干扰（如果项目有这个文件，需同步规则）
+  "css.customData": [
+    ".vscode/tailwind.json"
+  ],
+  "cSpell.words": [
+    "clsx",
+    "cssinjs",
+    "echarts",
+    "nprogress",
+    "partialize",
+    "sider",
+    "svgr",
+    "tailwindcss",
+    "tanstack",
+    "tseslint",
+    "zustand"
+  ],
+  "i18n-ally.localesPaths": [
+    "src/locales"
+  ]
+}
