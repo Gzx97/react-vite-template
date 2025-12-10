@@ -21,7 +21,7 @@ export const landingRoute: RouteObject = {
     title: "首页",
   },
 };
-
+console.log(landingRoute);
 export const nestMenuRoute: RouteObject = {
   path: ROUTE_PATHS.nestMenu,
   lazy: async () => ({
