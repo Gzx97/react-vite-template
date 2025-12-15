@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Button } from "antd";
-import EditModal from "./edit-modal";
+import EditModal from "./EditModal";
+import { fetchUserList } from "../api";
 
 type EditButtonProps = {
   data: any;
+  onRefresh?: () => void;
 };
 
-const createPromise = (data: any) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(data);
-    }, 1000);
-  });
-};
-
-export default function EditButton({ data }: EditButtonProps) {
+const EditButton: FC<EditButtonProps> = ({ data, onRefresh }) => {
   const [open, setOpen] = useState(false);
-
+  const createPromise = (data: any) => {
+    return fetchUserList();
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(data);
+      }, 1000);
+    });
+  };
   const onCreate = (values: any) => {
     console.log("Received values of form: ", values);
     return createPromise(values);
@@ -33,4 +34,6 @@ export default function EditButton({ data }: EditButtonProps) {
       <EditModal open={open} initialValues={data} onCreate={onCreate} onCancel={handleClose} />
     </>
   );
-}
+};
+
+export default EditButton;

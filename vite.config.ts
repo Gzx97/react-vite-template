@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3008,
       proxy: {
-        "/tenant-api": {
+        "/users": {
           target: env.VITE_APP_API_URL,
           changeOrigin: true,
           secure: false,

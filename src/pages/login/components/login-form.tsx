@@ -4,6 +4,7 @@ import { Button, Form, type FormProps, Input } from "antd";
 import { ROUTE_PATHS } from "@/router/route.constants";
 import { login } from "@/api/modules/account/user";
 import { useRequest } from "ahooks";
+import { setUser } from "@/stores/modules/user";
 
 type FieldType = {
   account?: string;
@@ -17,11 +18,17 @@ export default function LoginForm() {
     manual: true,
     onSuccess(data, params) {
       localStorage.setItem("token", "token");
+      setUser({
+        userInfo: data,
+      });
       navigate(ROUTE_PATHS.landing);
     },
   });
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     if (loading) return;
+    setUser({
+      userInfo: "ddd",
+    });
     onLogin(values);
     navigate(ROUTE_PATHS.landing);
   };

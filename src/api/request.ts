@@ -8,7 +8,6 @@ import axios, {
 import { RequestConfig, ApiResponse, RepeatRequestItem } from "./types";
 import { message } from "antd";
 
-// 创建 Axios 实例
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // 从环境变量读取基础地址
   timeout: 10000, // 请求超时时间
@@ -92,30 +91,23 @@ service.interceptors.response.use(
     // 3. 处理响应数据
     const { data, status } = response;
 
-    // HTTP 状态码校验（2xx 视为成功）
-    if (status < 200 || status >= 300) {
+    // HTTP 状态码校验（2xx 3xx视为成功）
+    if (status < 200 || status >= 400) {
       if (config.showError !== false) {
         message.error(`请求失败：${status}`);
       }
       return Promise.reject(new Error(`HTTP 错误：${status}`));
     }
 
-    // 后端业务状态码校验（根据实际接口调整）
-    if (data.code !== 200) {
-      // 特殊状态码处理（如 Token 过期、无权限等）
-      if (data.code === 401) {
-        message.error("登录状态已过期，请重新登录");
-        // 清除 Token 并跳转到登录页
-        localStorage.removeItem("token");
-        window.location.href = "/login";
-      } else if (config.showError !== false) {
-        message.error(data.message);
-      }
-      return Promise.reject(new Error(data.message || `业务错误：${data.code}`));
+    if (data.code === 401) {
+      message.error("登录状态已过期，请重新登录");
+      // 清除 Token 并跳转到登录页
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
 
     // 4. 是否解构响应数据（默认直接返回 data 字段）
-    return config.isDestructData !== false ? data.data : data;
+    return data as any;
   },
   (error: AxiosError<ApiResponse>) => {
     // 1. 移除请求缓存

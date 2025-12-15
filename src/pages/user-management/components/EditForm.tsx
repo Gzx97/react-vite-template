@@ -17,8 +17,6 @@ export default function EditForm({ initialValues, onFormInstanceReady }: EditFor
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // https://reactrouter.com/en/main/hooks/use-prompt
-  // Block navigating elsewhere when data has been entered into the input
   unstable_usePrompt({
     message: "您还有未保存的修改，确定要离开吗？",
     when: ({ currentLocation, nextLocation }) =>

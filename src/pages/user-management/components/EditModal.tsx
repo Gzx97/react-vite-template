@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { type FormInstance, Modal } from "antd";
 import type { Values } from "../types";
-import EditForm from "./edit-form";
+import EditForm from "./EditForm";
 
 type EditModalProps = {
   open: boolean;
@@ -17,7 +17,7 @@ export default function EditModal({ open, onCreate, onCancel, initialValues }: E
     <Modal
       title="Edit"
       open={open}
-      destroyOnClose
+      destroyOnHidden
       maskClosable={false}
       onCancel={onCancel}
       confirmLoading={loading}
@@ -29,7 +29,8 @@ export default function EditModal({ open, onCreate, onCancel, initialValues }: E
           setLoading(true);
           onCreate(values).finally(() => {
             setLoading(false);
-            formInstance?.resetFields();
+            onCancel();
+            // formInstance?.resetFields();
           });
         } catch (error) {
           console.log("Failed:", error);

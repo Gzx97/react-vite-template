@@ -21,8 +21,6 @@ export interface RequestConfig extends AxiosRequestConfig {
   showError?: boolean;
   /** 是否忽略重复请求（默认true） */
   ignoreRepeat?: boolean;
-  /** 响应数据是否需要解构（默认true，直接返回 data 字段） */
-  isDestructData?: boolean;
 }
 
 /**

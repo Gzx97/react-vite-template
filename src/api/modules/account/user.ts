@@ -41,3 +41,7 @@ export const getUserInfo = (config?: RequestConfig) => {
 export const logout = (config?: RequestConfig) => {
   return post("/auth/logout", undefined, config);
 };
+
+export const fetchUserList = async (params = { page: 3 }) => {
+  return get("https://jsonplaceholder.typicode.com/users", params);
+};
