@@ -27,8 +27,16 @@ export default tseslint.config({
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-unsafe-function-type": "off",
-    // 未使用变量相关规则（从 error 改为 warn）
-    "no-unused-vars": "warn", // 禁用原生规则，使用 TS 专属规则
+    "no-unused-vars": [
+      "warn",
+      {
+        vars: "all",
+        args: "none", // 核心修改：不检测函数参数是否未使用
+        argsIgnorePattern: "^_", // 可选：下划线开头的参数自动忽略（如 _userId）
+        ignoreRestSiblings: true,
+        caughtErrors: "none",
+      },
+    ],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {

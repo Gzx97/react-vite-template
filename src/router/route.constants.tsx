@@ -1,4 +1,4 @@
-import { Link, Outlet, type RouteObject } from "react-router-dom";
+import { Link, type RouteObject } from "react-router-dom";
 import { ProgressBar } from "@/components/progress-bar";
 
 export const ROUTE_PATHS = {
