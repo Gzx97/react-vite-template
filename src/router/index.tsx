@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import { ProgressBar } from "@/components/progress-bar";
-import { landingRoute, nestMenuRoute, ROUTE_PATHS, userManagerRoute } from "./route.constants";
+import { landingRoute, ROUTE_PATHS, systemManagementRoute } from "./route.constants";
 
 const routes: RouteObject[] = [
   {
@@ -22,8 +22,7 @@ const routes: RouteObject[] = [
         element: <Navigate replace to={ROUTE_PATHS.landing} />,
       },
       landingRoute,
-      userManagerRoute,
-      nestMenuRoute,
+      systemManagementRoute,
     ],
   },
   {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { HomeOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
+import { HomeOutlined, KeyOutlined, MenuOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
 import { Layout, Menu, type MenuProps } from "antd";
 // import ReactIcon from "@/assets/svg/react.svg?react";
 import LOGO from "@/assets/logo.png";
@@ -11,31 +11,53 @@ import { useSelector, useSettingsStore } from "@/stores";
 const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: string[] = []) => {
   const selectedKeys: string[] = [];
   let openKeys: string[] = [];
+
+  // 辅助函数：逐级向上回溯父路径
+  const getParentPaths = (pathname: string): string[] => {
+    const paths = [];
+    let current = pathname;
+    while (current.includes("/")) {
+      current = current.substring(0, current.lastIndexOf("/"));
+      if (current) paths.push(current);
+    }
+    return paths;
+  };
+
   const travel = (items: MenuProps["items"], pathname: string, path: string[]) => {
     if (!items || items.length === 0 || !pathname) return false;
 
-    for (const item of items!) {
-      if (item!.key === pathname) {
-        selectedKeys.push(item!.key);
-        openKeys = [...path];
-        return true; // 找到匹配的菜单项，返回true
-      }
-      if ((item as any).children) {
-        path.push(item!.key as string);
-        const found = travel((item as any).children, pathname, path);
+    for (const item of items) {
+      if (!item) continue;
 
-        if (!found) {
-          const parentPath = pathname.substring(0, pathname.lastIndexOf("/"));
-          travel((item as any).children, parentPath, path);
+      // 完全匹配当前路径
+      if (item.key === pathname) {
+        selectedKeys.push(item.key);
+        openKeys = [...path];
+        return true;
+      }
+      const children = (item as any).children;
+      // 如果有子菜单，递归检查
+      if (children && children.length > 0) {
+        const newPath = [...path, item.key as string];
+
+        // 先检查子菜单中是否有完全匹配
+        const found = travel(children, pathname, newPath);
+        if (found) return true;
+
+        // 如果未找到，逐级回溯父路径并检查
+        const parentPaths = getParentPaths(pathname);
+        for (const parentPath of parentPaths) {
+          if (travel(children, parentPath, newPath)) {
+            return true;
+          }
         }
-        // path.pop();
       }
     }
-    return false; // 没有找到匹配的菜单项，返回false
+
+    return false;
   };
 
   travel(items, pathname, path);
-
   return { selectedKeys, openKeys };
 };
 
@@ -45,23 +67,21 @@ const items: MenuProps["items"] = [
     label: <Link to={ROUTE_PATHS.landing}>首页</Link>,
     key: ROUTE_PATHS.landing,
   },
+
   {
-    icon: <UserOutlined />,
-    label: <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
-    key: ROUTE_PATHS.userManagement,
-  },
-  {
-    icon: <MenuOutlined />,
-    label: "一级菜单",
-    key: ROUTE_PATHS.nestMenu,
+    icon: <SettingOutlined />,
+    label: "系统管理",
+    key: ROUTE_PATHS.systemManagement,
     children: [
       {
-        key: ROUTE_PATHS.subMenu1,
-        label: <Link to={ROUTE_PATHS.subMenu1}>二级菜单-1</Link>,
+        key: ROUTE_PATHS.userManagement,
+        icon: <UserOutlined />,
+        label: <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
       },
       {
-        key: ROUTE_PATHS.subMenu2,
-        label: <Link to={ROUTE_PATHS.subMenu2}>二级菜单-2</Link>,
+        key: ROUTE_PATHS.permissionManagement,
+        label: <Link to={ROUTE_PATHS.permissionManagement}>权限管理</Link>,
+        icon: <KeyOutlined />,
       },
     ],
   },
