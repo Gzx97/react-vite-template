@@ -11,7 +11,6 @@ interface AccessProps {
 const Access: FC<PropsWithChildren<AccessProps>> = ({ permissions, children, fallback = null }) => {
   const { userInfo } = useUserStore.getState();
   if (!userInfo) return <>{fallback}</>;
-  console.log(userInfo);
   const isAccessible = hasAnyPermission(permissions);
 
   return isAccessible ? <>{children}</> : <>{fallback}</>;

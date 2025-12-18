@@ -1,34 +1,29 @@
 import { Navigate, useLocation } from "react-router-dom";
+import { PropsWithChildren, ReactElement } from "react";
 import { hasAnyPermission } from "@/utils/permission";
 import { useUserStore } from "@/stores/modules/user";
-import { RouteObjectWithAccess } from "./type";
-import { isNilEmpty } from "@/utils/isNilEmpty";
 
-interface AuthorizedRouteProps {
-  route: RouteObjectWithAccess;
-  children: React.ReactNode;
+export interface AuthorizedRouteProps {
+  access?: string[];
 }
 
-const AuthorizedRoute = ({ route, children }: AuthorizedRouteProps) => {
+// 🌟 用PropsWithChildren包裹，且明确返回值类型为ReactElement
+const AuthorizedRoute = ({ access, children }: PropsWithChildren<AuthorizedRouteProps>): ReactElement => {
   const { userInfo } = useUserStore();
   const location = useLocation();
 
-  // 未登录跳转到登录页
-  if (!userInfo) {
+  // 非空判断兜底，避免运行时错误
+  if (!userInfo?.roles || !userInfo?.permissions) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // 不需要权限控制的路由直接通过
-  if (!route.access) {
-    return <>{children}</>;
+  if (!access || access.length === 0) {
+    return <>{children}</>; // 必须用<>包裹children，避免ESLint解析错误
   }
 
-  // 检查权限标识
-  if (!isNilEmpty(route.access)) {
-    const hasRequiredPermission = hasAnyPermission(route.access as string[]);
-    if (!hasRequiredPermission) {
-      return <Navigate to="/not-auth" replace />;
-    }
+  const hasPermission = hasAnyPermission(access.filter(Boolean));
+  if (!hasPermission) {
+    return <Navigate to="/not-auth" replace />;
   }
 
   return <>{children}</>;

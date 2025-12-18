@@ -31,7 +31,7 @@ export const landingRoute: RouteObjectWithAccess = {
 // 系统管理
 export const systemManagementRoute: RouteObjectWithAccess = {
   path: ROUTE_PATHS.systemManagement,
-  access: ["admin"],
+  // access: ["admin"],
   lazy: async () => ({
     Component: SystemLayout,
   }),

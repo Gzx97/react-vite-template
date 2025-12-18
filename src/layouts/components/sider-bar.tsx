@@ -9,6 +9,7 @@ import { useSelector, useSettingsStore } from "@/stores";
 import { RouteObjectWithAccess } from "@/router/type";
 import { useUserStore } from "@/stores/modules/user";
 import { hasAnyPermission } from "@/utils/permission";
+import { isNilEmpty } from "@/utils/isNilEmpty";
 
 const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: string[] = []) => {
   const selectedKeys: string[] = [];
@@ -63,18 +64,20 @@ const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: str
   return { selectedKeys, openKeys };
 };
 
-const filterMenuItems = (items: RouteObjectWithAccess[]): RouteObjectWithAccess[] => {
+// TODO: 过滤菜单项，根据用户权限
+const filterMenuItems = (items: any): MenuProps["items"] => {
   const { userInfo } = useUserStore.getState();
   if (!userInfo) return [];
+  if (!items) return [];
 
-  return items.filter((item) => {
+  return items.filter((item: any) => {
     if (item.access) {
       const hasRequiredPermission = hasAnyPermission(item.access as string[]);
       if (!hasRequiredPermission) return false;
     }
 
     // 处理子菜单
-    if (item.children && item.children.length > 0) {
+    if (!isNilEmpty(item?.children)) {
       item.children = filterMenuItems(item.children);
       // 如果子菜单都被过滤，父菜单也不显示
       return item.children.length > 0;
