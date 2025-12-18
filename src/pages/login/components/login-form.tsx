@@ -17,8 +17,26 @@ export default function LoginForm() {
     manual: true,
     onSuccess(data, params) {
       localStorage.setItem("token", data?.data?.accessToken);
+      const mockAdmin = {
+        accessToken: "xxxxx",
+        username: "admin@qq.com",
+        avatar: "",
+        permissions: ["*:*:*"],
+        roles: ["admin"],
+        expireTime: "",
+      };
+      const mockUser = {
+        accessToken: "xxxxx",
+        username: "user@qq.com",
+        avatar: "",
+        permissions: ["device:add"],
+        roles: ["user"],
+        expireTime: "",
+      };
       setUser({
-        userInfo: data.data,
+        // userInfo: data.data,
+        // ...mockAdmin,
+        ...mockUser,
       });
       navigate(ROUTE_PATHS.landing);
     },

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { HomeOutlined, KeyOutlined, MenuOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
 import { Layout, Menu, type MenuProps } from "antd";
@@ -6,8 +6,10 @@ import { Layout, Menu, type MenuProps } from "antd";
 import LOGO from "@/assets/logo.png";
 import { ROUTE_PATHS } from "@/router/route.constants";
 import { useSelector, useSettingsStore } from "@/stores";
+import { RouteObjectWithAccess } from "@/router/type";
+import { useUserStore } from "@/stores/modules/user";
+import { hasAnyPermission } from "@/utils/permission";
 
-// 递归函数，找到匹配的菜单项
 const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: string[] = []) => {
   const selectedKeys: string[] = [];
   let openKeys: string[] = [];
@@ -59,6 +61,27 @@ const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: str
 
   travel(items, pathname, path);
   return { selectedKeys, openKeys };
+};
+
+const filterMenuItems = (items: RouteObjectWithAccess[]): RouteObjectWithAccess[] => {
+  const { userInfo } = useUserStore.getState();
+  if (!userInfo) return [];
+
+  return items.filter((item) => {
+    if (item.access) {
+      const hasRequiredPermission = hasAnyPermission(item.access as string[]);
+      if (!hasRequiredPermission) return false;
+    }
+
+    // 处理子菜单
+    if (item.children && item.children.length > 0) {
+      item.children = filterMenuItems(item.children);
+      // 如果子菜单都被过滤，父菜单也不显示
+      return item.children.length > 0;
+    }
+
+    return true;
+  });
 };
 
 const items: MenuProps["items"] = [

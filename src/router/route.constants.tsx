@@ -66,7 +66,6 @@ export const systemManagementRoute: RouteObjectWithAccess = {
             title: "用户详情",
             crumb: () => "用户详情",
           },
-          parentPath: ROUTE_PATHS.userManagement, // 关联上级路由路径
         },
       ],
     },
