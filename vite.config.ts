@@ -13,7 +13,13 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3008,
       proxy: {
-        "/users": {
+        // "/users": {
+        //   target: env.VITE_APP_API_URL,
+        //   changeOrigin: true,
+        //   secure: false,
+        // },
+        "/api": {
+          // target: "http://localhost:8000",
           target: env.VITE_APP_API_URL,
           changeOrigin: true,
           secure: false,

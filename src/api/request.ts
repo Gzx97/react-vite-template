@@ -98,12 +98,18 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(`HTTP 错误：${status}`));
     }
-
-    if (data.code === 401) {
-      message.error("登录状态已过期，请重新登录");
-      // 清除 Token 并跳转到登录页
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+    if (data.code !== 200) {
+      if (data.code === 401) {
+        message.error("登录状态已过期，请重新登录");
+        // 清除 Token 并跳转到登录页
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        // if (config.showError !== false) {
+        //   message.error(data.msg || "请求失败");
+        //   return Promise.reject(new Error(data.msg || "请求失败"));
+        // }
+      }
     }
 
     // 4. 是否解构响应数据（默认直接返回 data 字段）

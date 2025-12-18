@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, type FormProps, Input } from "antd";
+import { Button, Form, type FormProps, Input, message } from "antd";
 import { ROUTE_PATHS } from "@/router/route.constants";
 import { login } from "@/api/modules/account/user";
 import { useRequest } from "ahooks";
@@ -17,20 +16,18 @@ export default function LoginForm() {
   const { run: onLogin, loading } = useRequest(login, {
     manual: true,
     onSuccess(data, params) {
-      localStorage.setItem("token", "token");
+      localStorage.setItem("token", data?.data?.accessToken);
       setUser({
-        userInfo: data,
+        userInfo: data.data,
       });
       navigate(ROUTE_PATHS.landing);
     },
   });
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     if (loading) return;
-    setUser({
-      userInfo: "ddd",
-    });
     onLogin(values);
-    navigate(ROUTE_PATHS.landing);
+    message.success("登录成功");
+    // navigate(ROUTE_PATHS.landing);
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
@@ -39,17 +36,17 @@ export default function LoginForm() {
 
   return (
     <Form
-      initialValues={{ account: "admin", password: "123456" }}
+      initialValues={{ username: "123@qq.com", password: "1234qwer" }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item name="account" rules={[{ required: true, message: "请输入手机号" }]}>
-        <Input addonBefore={<UserOutlined />} placeholder="请输入手机号" />
+      <Form.Item name="username" rules={[{ required: true, message: "请输入手机号" }]}>
+        <Input placeholder="请输入手机号" />
       </Form.Item>
 
       <Form.Item name="password" rules={[{ required: true, message: "请输入密码" }]}>
-        <Input.Password addonBefore={<LockOutlined />} placeholder="请输入密码" />
+        <Input.Password placeholder="请输入密码" />
       </Form.Item>
 
       <Form.Item>

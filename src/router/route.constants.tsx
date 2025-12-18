@@ -1,78 +1,97 @@
-import { Link, type RouteObject } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { ProgressBar } from "@/components/progress-bar";
+import LandingPage from "@/pages/landing";
+import UserManagement from "@/pages/system-management/user-management";
+import SystemLayout from "@/pages/system-management";
+import PermissionManagement from "@/pages/system-management/permission-management";
+import { UserManagementDetail } from "@/pages/system-management/user-management/detail";
+import { RouteObjectWithAccess } from "./type";
 
 export const ROUTE_PATHS = {
   login: "/login",
   notFound: "/not-found",
   landing: "/landing",
-  userManagement: "/user-management",
-  nestMenu: "/nest-menu",
-  subMenu1: "/nest-menu/sub-menu-1",
-  subMenu2: "/nest-menu/sub-menu-2",
+  systemManagement: "/system-management",
+  userManagement: "/system-management/user-management",
+  userManagementDetail: "/system-management/user-management/detail",
+  permissionManagement: "/system-management/permission-management",
 };
 
-export const landingRoute: RouteObject = {
+export const landingRoute: RouteObjectWithAccess = {
   path: ROUTE_PATHS.landing,
   lazy: async () => ({
-    Component: (await import("@/pages/landing")).default,
+    Component: LandingPage,
   }),
   HydrateFallback: ProgressBar,
   handle: {
     title: "首页",
   },
 };
-export const nestMenuRoute: RouteObject = {
-  path: ROUTE_PATHS.nestMenu,
+
+// 系统管理
+export const systemManagementRoute: RouteObjectWithAccess = {
+  path: ROUTE_PATHS.systemManagement,
+  access: ["admin"],
   lazy: async () => ({
-    Component: (await import("@/pages/nest-menu")).default,
+    Component: SystemLayout,
   }),
   HydrateFallback: ProgressBar,
   handle: {
-    title: "嵌套菜单",
-    crumb: () => "嵌套菜单",
+    title: "系统管理",
+    crumb: () => "系统管理",
   },
   children: [
     {
-      path: ROUTE_PATHS.subMenu1,
-      lazy: async () => ({
-        Component: (await import("@/pages/nest-menu/sub-menu-1")).default,
-      }),
-      HydrateFallback: ProgressBar,
+      path: ROUTE_PATHS.userManagement,
       handle: {
-        title: "二级菜单-1",
-        crumb: () => <Link to={ROUTE_PATHS.subMenu1}>二级菜单-1</Link>,
-      },
-    },
-    {
-      path: ROUTE_PATHS.subMenu2,
-      lazy: async () => ({
-        Component: (await import("@/pages/nest-menu/sub-menu-2")).default,
-      }),
-      HydrateFallback: ProgressBar,
-      handle: {
-        title: "二级菜单-2",
-        crumb: () => <Link to={ROUTE_PATHS.subMenu2}>二级菜单-2</Link>,
+        title: "用户管理",
+        element: <Outlet />,
+        crumb: () => <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
       },
       children: [
         {
-          path: "/nest-menu/sub-menu-2/sub-menu-2-1",
+          index: true,
           lazy: async () => ({
-            Component: (await import("@/pages/nest-menu/sub-menu-2")).default,
+            Component: UserManagement,
           }),
+          HydrateFallback: ProgressBar,
+        },
+        {
+          path: `${ROUTE_PATHS.userManagementDetail}/:id`,
+          lazy: async () => ({
+            Component: UserManagementDetail,
+          }),
+          HydrateFallback: ProgressBar,
+          handle: {
+            title: "用户详情",
+            crumb: () => "用户详情",
+          },
+          parentPath: ROUTE_PATHS.userManagement, // 关联上级路由路径
         },
       ],
     },
-  ],
-};
+    {
+      path: ROUTE_PATHS.userManagement,
+      lazy: async () => ({
+        Component: UserManagement,
+      }),
+      HydrateFallback: ProgressBar,
+      handle: {
+        title: "用户管理",
+        crumb: () => <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
+      },
+    },
 
-export const userManagerRoute: RouteObject = {
-  path: ROUTE_PATHS.userManagement,
-  lazy: async () => ({
-    Component: (await import("@/pages/user-management")).default,
-  }),
-  HydrateFallback: ProgressBar,
-  handle: {
-    title: "用户管理",
-    crumb: () => <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
-  },
+    {
+      path: ROUTE_PATHS.permissionManagement,
+      lazy: async () => ({
+        Component: PermissionManagement,
+      }),
+      HydrateFallback: ProgressBar,
+      handle: {
+        title: "权限管理",
+        crumb: () => <Link to={ROUTE_PATHS.permissionManagement}>权限管理</Link>,
+      },
+    },
+  ],
 };
