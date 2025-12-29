@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import { ProgressBar } from "@/components/progress-bar";
-import { landingRoute, ROUTE_PATHS, systemManagementRoute } from "./route.constants";
+import { dataCollectorRoute, landingRoute, ROUTE_PATHS, systemManagementRoute } from "./route.constants";
+import { addAuthToRoutes } from "./helper";
 
 const routes: RouteObject[] = [
   {
@@ -22,8 +23,15 @@ const routes: RouteObject[] = [
         element: <Navigate replace to={ROUTE_PATHS.landing} />,
       },
       landingRoute,
+      dataCollectorRoute,
       systemManagementRoute,
     ],
+  },
+  {
+    path: "not-auth",
+    lazy: async () => ({
+      Component: (await import("@/pages/not-auth")).default,
+    }),
   },
   {
     path: "*",
@@ -33,8 +41,9 @@ const routes: RouteObject[] = [
     HydrateFallback: ProgressBar,
   },
 ];
+const newRoutes = addAuthToRoutes(routes);
 
-export const router = createBrowserRouter(routes, {
+export const router = createBrowserRouter(newRoutes, {
   basename: import.meta.env.VITE_APP_BASE_URL,
   future: {
     v7_relativeSplatPath: true,

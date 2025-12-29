@@ -6,6 +6,7 @@ import SystemLayout from "@/pages/system-management";
 import PermissionManagement from "@/pages/system-management/permission-management";
 import { UserManagementDetail } from "@/pages/system-management/user-management/detail";
 import { RouteObjectWithAccess } from "./type";
+import DataCollector from "@/pages/data-collector";
 
 export const ROUTE_PATHS = {
   login: "/login",
@@ -15,6 +16,7 @@ export const ROUTE_PATHS = {
   userManagement: "/system-management/user-management",
   userManagementDetail: "/system-management/user-management/detail",
   permissionManagement: "/system-management/permission-management",
+  dataCollector: "/data-collector",
 };
 
 export const landingRoute: RouteObjectWithAccess = {
@@ -25,6 +27,19 @@ export const landingRoute: RouteObjectWithAccess = {
   HydrateFallback: ProgressBar,
   handle: {
     title: "首页",
+  },
+};
+
+// 数据采集
+export const dataCollectorRoute: RouteObjectWithAccess = {
+  path: ROUTE_PATHS.dataCollector,
+  lazy: async () => ({
+    Component: DataCollector,
+  }),
+  HydrateFallback: ProgressBar,
+  handle: {
+    title: "数据采集",
+    crumb: () => <Link to={ROUTE_PATHS.dataCollector}>数据采集</Link>,
   },
 };
 
@@ -66,7 +81,6 @@ export const systemManagementRoute: RouteObjectWithAccess = {
             title: "用户详情",
             crumb: () => "用户详情",
           },
-          parentPath: ROUTE_PATHS.userManagement, // 关联上级路由路径
         },
       ],
     },

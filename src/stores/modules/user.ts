@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export const useUserStore = create(
+interface UserInfo {
+  name?: string;
+  [key: string]: any; // 如果有其他动态字段
+}
+
+interface UserStoreState {
+  userInfo: UserInfo | null;
+  loading: boolean;
+  error: string | null;
+  clearUser: () => void;
+}
+
+export const useUserStore = create<UserStoreState>()(
   persist(
     (set) => ({
       userInfo: null,
@@ -13,10 +25,14 @@ export const useUserStore = create(
   ),
 );
 
-export function setUser(user: any) {
-  useUserStore.setState(user);
+export function setUser(userInfo: UserInfo | null) {
+  useUserStore.setState({ userInfo });
 }
 
-export function getUser() {
-  return useUserStore.getState();
+export function getUser(): UserInfo | null {
+  return useUserStore.getState().userInfo;
+}
+
+export function setFullState(state: Partial<UserStoreState>) {
+  useUserStore.setState(state);
 }

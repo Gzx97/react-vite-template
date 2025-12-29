@@ -1,13 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { HomeOutlined, KeyOutlined, MenuOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  KeyOutlined,
+  MenuOutlined,
+  SettingOutlined,
+  UserOutlined,
+  RobotOutlined,
+} from "@ant-design/icons";
 import { Layout, Menu, type MenuProps } from "antd";
 // import ReactIcon from "@/assets/svg/react.svg?react";
 import LOGO from "@/assets/logo.png";
 import { ROUTE_PATHS } from "@/router/route.constants";
 import { useSelector, useSettingsStore } from "@/stores";
+import { RouteObjectWithAccess } from "@/router/type";
+import { useUserStore } from "@/stores/modules/user";
+import { hasAnyPermission } from "@/utils/permission";
+import { isNilEmpty } from "@/utils/isNilEmpty";
 
-// 递归函数，找到匹配的菜单项
 const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: string[] = []) => {
   const selectedKeys: string[] = [];
   let openKeys: string[] = [];
@@ -61,30 +71,58 @@ const findSelectedKeys = (items: MenuProps["items"], pathname: string, path: str
   return { selectedKeys, openKeys };
 };
 
+// TODO: 过滤菜单项，根据用户权限
+const filterMenuItems = (items: any): MenuProps["items"] => {
+  const { userInfo } = useUserStore.getState();
+  if (!userInfo) return [];
+  if (!items) return [];
+
+  return items.filter((item: any) => {
+    if (item.access) {
+      const hasRequiredPermission = hasAnyPermission(item.access as string[]);
+      if (!hasRequiredPermission) return false;
+    }
+
+    // 处理子菜单
+    if (!isNilEmpty(item?.children)) {
+      item.children = filterMenuItems(item.children);
+      // 如果子菜单都被过滤，父菜单也不显示
+      return item.children.length > 0;
+    }
+
+    return true;
+  });
+};
+
 const items: MenuProps["items"] = [
   {
     icon: <HomeOutlined />,
-    label: <Link to={ROUTE_PATHS.landing}>首页</Link>,
+    label: <Link to={ROUTE_PATHS.landing}>主页板块</Link>,
     key: ROUTE_PATHS.landing,
   },
-
   {
-    icon: <SettingOutlined />,
-    label: "系统管理",
-    key: ROUTE_PATHS.systemManagement,
-    children: [
-      {
-        key: ROUTE_PATHS.userManagement,
-        icon: <UserOutlined />,
-        label: <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
-      },
-      {
-        key: ROUTE_PATHS.permissionManagement,
-        label: <Link to={ROUTE_PATHS.permissionManagement}>权限管理</Link>,
-        icon: <KeyOutlined />,
-      },
-    ],
+    icon: <RobotOutlined />,
+    label: <Link to={ROUTE_PATHS.dataCollector}>数据采集</Link>,
+    key: ROUTE_PATHS.dataCollector,
   },
+
+  // {
+  //   icon: <SettingOutlined />,
+  //   label: "系统管理",
+  //   key: ROUTE_PATHS.systemManagement,
+  //   children: [
+  //     {
+  //       key: ROUTE_PATHS.userManagement,
+  //       icon: <UserOutlined />,
+  //       label: <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
+  //     },
+  //     {
+  //       key: ROUTE_PATHS.permissionManagement,
+  //       label: <Link to={ROUTE_PATHS.permissionManagement}>权限管理</Link>,
+  //       icon: <KeyOutlined />,
+  //     },
+  //   ],
+  // },
 ];
 
 export default function SiderBar() {
