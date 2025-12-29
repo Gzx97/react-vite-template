@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { HomeOutlined, KeyOutlined, MenuOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  KeyOutlined,
+  MenuOutlined,
+  SettingOutlined,
+  UserOutlined,
+  RobotOutlined,
+} from "@ant-design/icons";
 import { Layout, Menu, type MenuProps } from "antd";
 // import ReactIcon from "@/assets/svg/react.svg?react";
 import LOGO from "@/assets/logo.png";
@@ -90,27 +97,32 @@ const filterMenuItems = (items: any): MenuProps["items"] => {
 const items: MenuProps["items"] = [
   {
     icon: <HomeOutlined />,
-    label: <Link to={ROUTE_PATHS.landing}>首页</Link>,
+    label: <Link to={ROUTE_PATHS.landing}>主页板块</Link>,
     key: ROUTE_PATHS.landing,
   },
-
   {
-    icon: <SettingOutlined />,
-    label: "系统管理",
-    key: ROUTE_PATHS.systemManagement,
-    children: [
-      {
-        key: ROUTE_PATHS.userManagement,
-        icon: <UserOutlined />,
-        label: <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
-      },
-      {
-        key: ROUTE_PATHS.permissionManagement,
-        label: <Link to={ROUTE_PATHS.permissionManagement}>权限管理</Link>,
-        icon: <KeyOutlined />,
-      },
-    ],
+    icon: <RobotOutlined />,
+    label: <Link to={ROUTE_PATHS.dataCollector}>数据采集</Link>,
+    key: ROUTE_PATHS.dataCollector,
   },
+
+  // {
+  //   icon: <SettingOutlined />,
+  //   label: "系统管理",
+  //   key: ROUTE_PATHS.systemManagement,
+  //   children: [
+  //     {
+  //       key: ROUTE_PATHS.userManagement,
+  //       icon: <UserOutlined />,
+  //       label: <Link to={ROUTE_PATHS.userManagement}>用户管理</Link>,
+  //     },
+  //     {
+  //       key: ROUTE_PATHS.permissionManagement,
+  //       label: <Link to={ROUTE_PATHS.permissionManagement}>权限管理</Link>,
+  //       icon: <KeyOutlined />,
+  //     },
+  //   ],
+  // },
 ];
 
 export default function SiderBar() {

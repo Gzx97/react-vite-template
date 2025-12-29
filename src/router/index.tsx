@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import { ProgressBar } from "@/components/progress-bar";
-import { landingRoute, ROUTE_PATHS, systemManagementRoute } from "./route.constants";
+import { dataCollectorRoute, landingRoute, ROUTE_PATHS, systemManagementRoute } from "./route.constants";
 import { addAuthToRoutes } from "./helper";
 
 const routes: RouteObject[] = [
@@ -23,6 +23,7 @@ const routes: RouteObject[] = [
         element: <Navigate replace to={ROUTE_PATHS.landing} />,
       },
       landingRoute,
+      dataCollectorRoute,
       systemManagementRoute,
     ],
   },

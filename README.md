@@ -2,12 +2,10 @@
 
 [React + vite 项目模板]
 
-
-
 ## 💻技术栈
 
 - 🌵 `vite` - 前端构建工具，提升前端开发体验.
-- ✈ `react` - 不用介绍了吧
+- ✈ `react` - React YYDS
 - 🎉 `react-router-dom` - 路由管理方案
 - 🎨 `antd` - 开箱即用的高质量 React UI 组件库
 - 💅 `tailwindcss` - 实用程序优先的 CSS 框架

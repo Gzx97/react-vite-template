@@ -35,8 +35,8 @@ export default function LoginForm() {
       };
       setUser({
         // userInfo: data.data,
-        // ...mockAdmin,
-        ...mockUser,
+        ...mockAdmin,
+        // ...mockUser,
       });
       navigate(ROUTE_PATHS.landing);
     },
